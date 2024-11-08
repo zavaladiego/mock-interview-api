@@ -1,0 +1,13 @@
+fastapi[standard]==0.115.4
+boto3==1.35.54
+pydantic-settings==2.6.1
+requests==2.32.3
+langchain==0.1.20
+langchain-community==0.0.38
+langchain-core==0.1.53
+langchain-objectbox==0.1.0
+langchain-openai==0.1.7
+langchain-text-splitters==0.0.2
+openai==1.54.1
+langchainhub==0.1.21
+python-jobspy==1.1.75
