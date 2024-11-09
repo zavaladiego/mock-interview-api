@@ -18,7 +18,7 @@ class JobRequest(BaseModel):
     hours_old: int = 72
     enforce_annual_salary: bool = False
 
-@router.get("/jobs")
+@router.post("/jobs")
 async def get_jobs(job_query: JobRequest):
     jobs_data = get_jobs_in_json(
         site_name=job_query.site_name,
