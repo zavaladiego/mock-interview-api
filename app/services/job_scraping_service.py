@@ -2,13 +2,16 @@
 import json
 from jobspy import scrape_jobs
 
+from app.shared.enums.job_site_type import JobSiteType
+from app.shared.enums.job_type import JobType
+
 def get_jobs_in_json(
-    site_name=["indeed"],
+    site_name=[JobSiteType.indeed],
     search_term="Ingeniero de software",
     google_search_term="ingeniero de software cerca de Lima",
     location="Lima, Peru",
     is_remote=False,
-    job_type="fulltime",
+    job_type=JobType.fulltime,
     results_wanted=10,
     country_indeed="Peru",
     offset=0,

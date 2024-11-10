@@ -1,17 +1,19 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.services.job_scraping_service import get_jobs_in_json
+from app.shared.enums.job_site_type import JobSiteType
+from app.shared.enums.job_type import JobType
 
 router = APIRouter()
 
 class JobRequest(BaseModel):
-    site_name: List[str] = ["indeed"]
+    site_name: List[str] = [JobSiteType.indeed]
     search_term: str = "Ingeniero de software"
     google_search_term: str = "ingeniero de software cerca de Lima"
     location: str = "Lima, Peru"
     is_remote: bool = False
-    job_type: str = "fulltime"
+    job_type: Optional[str] = JobType.fulltime
     results_wanted: int = 10
     country_indeed: str = "Peru"
     offset: int = 0
