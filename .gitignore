@@ -11,4 +11,3 @@ ENV/
 # Temporary
 /tmp/*.mp3
 /objectbox/
-/data/data.txt

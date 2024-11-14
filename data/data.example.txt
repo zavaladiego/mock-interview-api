@@ -1,1 +1,0 @@
-This is a txt file where the context for langchain is stored.

@@ -15,7 +15,12 @@ if not OpenAI_key:
 
 # Initialize and configure the retrieval chain
 def initialize_qa_chain():
-    loader = TextLoader("./data/data.txt")
+    # Valida that ./data/context.txt exists\
+    context_file = "./data/context.txt"
+    if not os.path.exists(context_file):
+        raise FileNotFoundError("File ./data/context.txt not found")
+    
+    loader = TextLoader(context_file)
     data = loader.load()
     text_splitter = RecursiveCharacterTextSplitter()
     documents = text_splitter.split_documents(data)
