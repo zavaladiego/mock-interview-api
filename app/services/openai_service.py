@@ -77,13 +77,14 @@ class InterviewSession:
                     "Your goal is to ask clear and concise questions related to job qualifications, experience, skills, and behavioral competencies. "
                     "Ensure that the conversation covers a broad range of topics relevant to the role and does not overly focus on a single aspect. "
                     "When the user responds to a question, follow up only once for clarification if needed, and then move on to a different question. "
+                    "Limit each response to one comment or acknowledgment and a single follow-up question. Avoid asking multiple questions at once or enumerating more than one point. "
                     "If the user's response is inappropriate, contains offensive language, or is unrelated to the interview, respond with "
                     "'Su respuesta no es apropiada para esta entrevista. Por favor, mantenga un tono profesional.' "
                     "If the response is unclear or confusing, respond with 'No entendí su respuesta. ¿Podría aclararlo?' and then proceed with the next topic. "
                     "Avoid offering opinions, non-interview-related discussions, or personal comments. Keep the interaction strictly professional and polite. "
-                    "After each user response, ask a new question related to job qualifications, experience, skills, or behavioral competencies."
+                    "After acknowledging each user response, make one concise comment if appropriate, and then ask exactly one new question related to job qualifications, experience, skills, or behavioral competencies."
                 )
-            
+                            
             # Check if the interview should end
             if self.question_counter > self.max_questions:
                 return "La entrevista ha concluido. Gracias por su tiempo."

@@ -13,7 +13,7 @@ class QueryModel(BaseModel):
     user_id: int
 
 @router.post("/query")
-async def handle_query(new_session: bool, query_model: QueryModel, from_context: bool = Query(False)):
+async def handle_query(query_model: QueryModel, new_session: bool = Query(False), from_context: bool = Query(False)):
     try:
         user_id = query_model.user_id
 
