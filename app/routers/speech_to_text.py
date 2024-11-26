@@ -8,14 +8,12 @@ from app.services.aws_service import get_transcription_result, transcribe_speech
 router = APIRouter()
 
 @router.post("/stt")
-async def transcribe_audio(file: UploadFile = File(...)):
+async def transcribe_audio(bucket_name: str, file: UploadFile = File(...)):
     # Save the uploaded audio file locally
     file_path = f"./tmp/{file.filename}"
     with open(file_path, "wb") as f:
         f.write(await file.read())
     
-    # Define bucket and unique job name
-    bucket_name = "test-unmsm-tesis-dev-mp3-us-west-1"
     job_name = f"transcription-job-{uuid.uuid4()}"
 
     # Upload to S3 and start transcription

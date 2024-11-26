@@ -47,27 +47,63 @@ def handle_retrieval_query(query: str) -> str:
     except Exception as e:
         raise RuntimeError(f"Error in retrieval query: {str(e)}")
 
-def handle_direct_openai_query(query: str) -> str:
-    """Directly query OpenAI API for non-contextual responses."""
-    client = OpenAI()
-    try:
-        completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": (
-                    "You are an AI simulation acting as an interviewer. Conduct the interview entirely in Spanish, asking professional questions "
-                    "related to job qualifications, experience, skills, and behavioral competencies. Interpret the user's responses "
-                    "accurately and adapt your follow-up questions to simulate a realistic interview flow. Respond in clear, concise, and polite Spanish. "
-                    "Avoid responding to non-interview related topics or offering personal opinions, and remain strictly professional. "
-                    "For simple greetings or unclear responses from the user, respond briefly and neutrally to guide the conversation back to interview questions. "
-                    "If the user's input is unrelated or confusing, respond only with 'invalidQuery'."
-                )},
-                {"role": "user", "content": query},
-            ]
-        )
-        response = completion.choices[0].message.content.strip()
-        return response if response else "Respuesta no válida del modelo"
-    except Exception as e:
-        raise RuntimeError(f"Error in OpenAI direct query: {str(e)}")
+class InterviewSession:
+    def __init__(self, max_questions: int = 5, max_history_length: int = 5):
+        self.conversation_history = []
+        self.question_counter = 0
+        self.max_questions = max_questions
+        self.max_history_length = max_history_length
 
+    def handle_direct_openai_query(self, query: str) -> str:
+        """Directly query OpenAI API for non-contextual responses."""
+        client = OpenAI()
+        try:
+            # Append the new user message to the conversation history
+            self.conversation_history.append({"role": "user", "content": query})
+            
+            # Limit the conversation history to the most recent messages
+            limited_history = self.conversation_history[-self.max_history_length:]
+            
+            # Determine the system message based on the question counter
+            if self.question_counter == self.max_questions - 1:
+                system_message = (
+                    "This is the last question of the interview. "
+                    "Thank you for your time. "
+                    "If you have any additional questions, please ask them now."
+                )
+            else:
+                system_message = (
+                    "You are an AI simulation acting as a professional interviewer conducting a structured interview in Spanish. "
+                    "Your goal is to ask clear and concise questions related to job qualifications, experience, skills, and behavioral competencies. "
+                    "Ensure that the conversation covers a broad range of topics relevant to the role and does not overly focus on a single aspect. "
+                    "When the user responds to a question, follow up only once for clarification if needed, and then move on to a different question. "
+                    "If the user's response is inappropriate, contains offensive language, or is unrelated to the interview, respond with "
+                    "'Su respuesta no es apropiada para esta entrevista. Por favor, mantenga un tono profesional.' "
+                    "If the response is unclear or confusing, respond with 'No entendí su respuesta. ¿Podría aclararlo?' and then proceed with the next topic. "
+                    "Avoid offering opinions, non-interview-related discussions, or personal comments. Keep the interaction strictly professional and polite. "
+                    "After each user response, ask a new question related to job qualifications, experience, skills, or behavioral competencies."
+                )
+            
+            # Check if the interview should end
+            if self.question_counter > self.max_questions:
+                return "La entrevista ha concluido. Gracias por su tiempo."
+            
+            # Include the limited conversation history in the request
+            completion = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": system_message},
+                    *limited_history,
+                ]
+            )
 
+            # Increment the question counter
+            self.question_counter += 1
+            
+            # Append the assistant's response to the conversation history
+            response = completion.choices[0].message.content.strip()
+            self.conversation_history.append({"role": "assistant", "content": response})
+                    
+            return response if response else "Respuesta no válida del modelo"
+        except Exception as e:
+            raise RuntimeError(f"Error in OpenAI direct query: {str(e)}")

@@ -20,10 +20,6 @@ def synthesize_speech(content: str, language_code: str = "es-MX", voice_id: str 
         VoiceId=voice_id)
     audio = result['AudioStream'].read()
     
-    # Save audio to a file for debugging purposes
-    with open("tmp/audio.mp3", "wb") as file:
-        file.write(audio)
-
     return audio
 
 def upload_to_s3(file_path: str, bucket_name: str) -> str:
