@@ -9,7 +9,7 @@ router = APIRouter()
 
 class JobRequest(BaseModel):
     location: Optional[str] = None
-    google_search_term: Optional[str] = None
+    google_search_term: Optional[str] = "Ingeniero de software"
     hours_old: Optional[int] = None
     job_type: Optional[str] = None
     is_remote: Optional[bool] = False

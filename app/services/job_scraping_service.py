@@ -23,7 +23,7 @@ def get_jobs_in_json(
 ):
     try:
         location = _setLocation(location)
-        google_search_term = _setGoogleSearchTerm(location, search_term)
+        google_search_term = _setGoogleSearchTerm(location, google_search_term)
 
         # Perform the scraping with dynamic parameters
         df = scrape_jobs(
